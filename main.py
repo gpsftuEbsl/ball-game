@@ -9,6 +9,13 @@ info = pygame.display.Info()
 WIDTH, HEIGHT = info.current_w, info.current_h
 BLACK = (0, 0, 0)
 
+class Obstacle:
+    def __init__(self, image_path):
+        self.image = pygame.image.load(image_path)
+        self.rect = self.image.get_rect()
+    def draw(self, surface):
+        surface.blit(self.image, self.rect)
+
 class Player:
     def __init__(self, image_path): # 建構子
         self.image = pygame.image.load(image_path)
