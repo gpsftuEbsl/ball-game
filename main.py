@@ -40,8 +40,8 @@ def create_full_screen_map():
                     line += "#"
                 else:
                     line += "."
-            elif row == MAP_ROWS - 1:  # 底部邊界
-                line += "#"  # 底部全部都是障礙物作為地面
+            # elif row == MAP_ROWS - 1:  # 底部邊界
+            #     line += "#"  # 底部全部都是障礙物作為地面
             else:
                 line += "."
         map_data.append(line)
@@ -115,7 +115,7 @@ class Player:
             self.rect.x += self.move_speed
         if keys[pygame.K_UP] and not self.jumping and not self.falling: # 如果移除 and not self.falling 條件則在下落過程中可繼續往上跳
             self.jumping = True
-            self.jump_counter = 15
+            self.jump_counter = 30
 
     def update(self, obstacles): # 成員函數 - 加入障礙物碰撞檢測
         # 記錄原始位置
@@ -127,7 +127,7 @@ class Player:
             if self.jump_counter <= 0:
                 self.jumping = False
                 self.falling = True
-                self.fall_counter = 15 # 共15禎 每禎移動10像素
+                self.fall_counter = 30 # 共15禎 每禎移動10像素
 
         elif self.falling:
             self.rect.y += self.move_speed
@@ -144,7 +144,7 @@ class Player:
                 if self.jumping:
                     self.jumping = False
                     self.falling = True
-                    self.fall_counter = 15
+                    self.fall_counter = 30
                 elif self.falling:
                     self.falling = False
                 break
