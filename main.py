@@ -12,12 +12,44 @@ BLACK = (0, 0, 0)
 # 格子大小
 TILE_SIZE = 64
 
-# 地圖數據
-map_data = [
-    "..................",
-    "..###.............",
-    "..........###.....",
-]
+# 計算地圖尺寸 (根據螢幕大小)
+MAP_COLS = WIDTH // TILE_SIZE
+MAP_ROWS = HEIGHT // TILE_SIZE
+
+# 創建更大的地圖數據來填滿整個螢幕
+def create_full_screen_map():
+    """創建填滿整個螢幕的地圖"""
+    map_data = []
+    
+    for row in range(MAP_ROWS):
+        line = ""
+        for col in range(MAP_COLS):
+            # 在特定位置放置障礙物
+            if row == MAP_ROWS - 5:  # 距離底部5格的位置
+                if 3 <= col <= 6 or 12 <= col <= 15:  # 兩組障礙物
+                    line += "#"
+                else:
+                    line += "."
+            elif row == MAP_ROWS - 8:  # 距離底部8格的位置
+                if 8 <= col <= 10:  # 中間的障礙物
+                    line += "#"
+                else:
+                    line += "."
+            elif row == MAP_ROWS - 12:  # 距離底部12格的位置
+                if 5 <= col <= 7 or 18 <= col <= 20:  # 更多障礙物
+                    line += "#"
+                else:
+                    line += "."
+            elif row == MAP_ROWS - 1:  # 底部邊界
+                line += "#"  # 底部全部都是障礙物作為地面
+            else:
+                line += "."
+        map_data.append(line)
+    
+    return map_data
+
+# 生成適合螢幕大小的地圖
+map_data = create_full_screen_map()
 
 class Obstacle:
     def __init__(self, x, y, width, height, image_path=None, color=(100, 100, 100)):
@@ -67,7 +99,7 @@ class Player:
     def __init__(self, image_path): # 建構子
         self.image = pygame.image.load(image_path)
         self.rect = self.image.get_rect()
-        self.rect.y = HEIGHT - 100  # 起始在底部附近
+        self.rect.y = HEIGHT - 150  # 起始在地面上方
         self.rect.x = 100  # 起始在左側
         self.move_speed = 10 # 每禎移動10像素
 
@@ -152,6 +184,9 @@ class Game:
             print("⚠️ 無法載入玩家圖片，請確保 small_ball.png 存在")
             # 建立一個簡單的矩形作為玩家
             self.player = self.create_simple_player()
+        
+        # 調整玩家起始位置到地面上方
+        self.player.rect.y = HEIGHT - 150  # 在地面上方
 
         # 根據地圖數據建立障礙物
         self.obstacles = self.create_obstacles_from_map(map_data)
@@ -160,7 +195,7 @@ class Game:
         """建立簡單的矩形玩家（當圖片載入失敗時使用）"""
         class SimplePlayer:
             def __init__(self):
-                self.rect = pygame.Rect(100, HEIGHT - 100, 32, 32)
+                self.rect = pygame.Rect(100, HEIGHT - 150, 32, 32)  # 調整起始位置
                 self.move_speed = 10
                 self.jumping = False
                 self.jump_counter = 0
